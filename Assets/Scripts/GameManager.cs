@@ -12,10 +12,16 @@ public class GameManager : Singleton<GameManager> {
     GameObject spikesRight;
 
     [SerializeField]
+    GameObject candies;
+
+    [SerializeField]
     GameObject scoreText;
 
     [SerializeField]
     GameObject gameOver;
+
+    [SerializeField]
+    GameObject ready;
 
     private int score;
     public int Score
@@ -28,6 +34,7 @@ public class GameManager : Singleton<GameManager> {
         {
             score = value;
             scoreText.GetComponent<Text>().text = score.ToString("00");
+            SoundManager.Instance.Play(SoundManager.Sounds.getScore);
         }
     }
 
@@ -106,6 +113,19 @@ public class GameManager : Singleton<GameManager> {
         {
             rand = Random.Range(0, obj.transform.childCount);
 
+            if (rand == obj.transform.childCount / 2)
+            {
+                GameObject candy = candies.transform.GetChild(Random.Range(0, 2)).gameObject;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+                if (!candy.active)
+#pragma warning restore CS0618 // Type or member is obsolete
+                {
+                    candy.GetComponent<Candy>().Init();
+                    candy.SetActive(true);
+                }
+            }
+
             obj.transform.GetChild(rand).gameObject.GetComponent<Image>().enabled = true;
             obj.transform.GetChild(rand).gameObject.GetComponent<PolygonCollider2D>().enabled = true;
         }
@@ -114,5 +134,10 @@ public class GameManager : Singleton<GameManager> {
     public void GameOver()
     {
         gameOver.SetActive(true);
+    }
+
+    public void Started()
+    {
+        ready.GetComponent<Animator>().SetBool("IsStarted", true);
     }
 }

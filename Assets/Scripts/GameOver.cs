@@ -31,7 +31,7 @@ public class GameOver : MonoBehaviour {
         SceneManager.LoadScene(scene);
     }
 
-    public void Init()
+    void Init()
     {
         scoreText.text = GameManager.Instance.Score.ToString("00");
         bestScoreText.text = GameManager.Instance.BestScore.ToString("00");

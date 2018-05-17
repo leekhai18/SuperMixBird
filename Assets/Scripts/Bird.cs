@@ -49,6 +49,7 @@ public class Bird : MonoBehaviour
             {
                 if (currentState == BirdState.begin)
                 {
+                    GameManager.Instance.Started();
                     rendererForBeginAnim.SetActive(false);
                     GetComponent<SpriteRenderer>().enabled = true;
                     rb.bodyType = RigidbodyType2D.Dynamic;
@@ -85,21 +86,30 @@ public class Bird : MonoBehaviour
         {
             Die();
         }
+
+        if (collision.gameObject.CompareTag("Candy") && currentState != BirdState.die)
+        {
+            GameManager.Instance.Score++;
+            collision.gameObject.SetActive(false);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
-            if (scaleX == 1)
+            if (currentState != BirdState.die)
             {
-                GameManager.Instance.FaceOutSpikesRight();
-                GameManager.Instance.FaceInSpikesLeft();
-            }
-            else
-            {
-                GameManager.Instance.FaceOutSpikesLeft();
-                GameManager.Instance.FaceInSpikesRight();
+                if (scaleX == 1)
+                {
+                    GameManager.Instance.FaceOutSpikesRight();
+                    GameManager.Instance.FaceInSpikesLeft();
+                }
+                else
+                {
+                    GameManager.Instance.FaceOutSpikesLeft();
+                    GameManager.Instance.FaceInSpikesRight();
+                }
             }
 
             velocityJumpX = -1 * velocityJumpX;
@@ -108,7 +118,6 @@ public class Bird : MonoBehaviour
 
             if (currentState != BirdState.die)
             {
-                SoundManager.Instance.Play(SoundManager.Sounds.getScore);
                 GameManager.Instance.Score++;
                 if (GameManager.Instance.Score > PlayerPrefs.GetInt("bestScore", GameManager.Instance.BestScore))
                 {
@@ -129,9 +138,15 @@ public class Bird : MonoBehaviour
         if (currentState != BirdState.die)
         { 
             currentState = BirdState.die;
+
             SoundManager.Instance.Play(SoundManager.Sounds.die);
+
             animator.SetBool("IsDied", true);
             rb.velocity = new Vector2(velocityJumpX * 3, velocityJumpY);
+
+            GameManager.Instance.FaceOutSpikesLeft();
+            GameManager.Instance.FaceOutSpikesRight();
+
             StartCoroutine(FaceOutThenDie());
         }
     }
@@ -152,7 +167,5 @@ public class Bird : MonoBehaviour
     void SetActiveToFalse()
     {
         gameObject.SetActive(false);
-        GameManager.Instance.FaceOutSpikesLeft();
-        GameManager.Instance.FaceOutSpikesRight();
     }
 }
