@@ -11,10 +11,60 @@ public class GameManager : Singleton<GameManager> {
     [SerializeField]
     GameObject spikesRight;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    [SerializeField]
+    GameObject scoreText;
+
+    [SerializeField]
+    GameObject gameOver;
+
+    private int score;
+    public int Score
+    {
+        get
+        {
+            return score;
+        }
+        set
+        {
+            score = value;
+            scoreText.GetComponent<Text>().text = score.ToString("00");
+        }
+    }
+
+    private int bestScore;
+    public int BestScore
+    {
+        get
+        {
+            return bestScore;
+        }
+        set
+        {
+            bestScore = value;
+        }
+    }
+
+    private int gamesPlayed;
+    public int GamesPlayed
+    {
+        get
+        {
+            return gamesPlayed;
+        }
+        set
+        {
+            gamesPlayed = value;
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
+        bestScore = PlayerPrefs.GetInt("bestScore", 0);
+        gamesPlayed = PlayerPrefs.GetInt("gamesPlayed", 0);
+
+        gamesPlayed++;
+        PlayerPrefs.SetInt("gamesPlayed", gamesPlayed);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -59,5 +109,10 @@ public class GameManager : Singleton<GameManager> {
             obj.transform.GetChild(rand).gameObject.GetComponent<Image>().enabled = true;
             obj.transform.GetChild(rand).gameObject.GetComponent<PolygonCollider2D>().enabled = true;
         }
+    }
+
+    public void GameOver()
+    {
+        gameOver.SetActive(true);
     }
 }

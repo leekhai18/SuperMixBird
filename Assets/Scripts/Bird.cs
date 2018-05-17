@@ -7,29 +7,35 @@ public class Bird : MonoBehaviour
 {
     enum BirdState
     {
-        normal,
+        begin,
         jump,
         die
     }
-
     BirdState currentState;
+
 
     [SerializeField]
     float velocityJumpY;
     [SerializeField]
     float velocityJumpX;
 
+
     int scaleX = 1;
 
     Rigidbody2D rb;
 
     Animator animator;
+
+    [SerializeField]
+    GameObject rendererForBeginAnim;
+
     // Use this for initialization
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        currentState = BirdState.normal;
+        currentState = BirdState.begin;
+        rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
     // Update is called once per frame
@@ -41,10 +47,20 @@ public class Bird : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
+                if (currentState == BirdState.begin)
+                {
+                    rendererForBeginAnim.SetActive(false);
+                    GetComponent<SpriteRenderer>().enabled = true;
+                    rb.bodyType = RigidbodyType2D.Dynamic;
+                }
+
+                animator.SetBool("IsJumping", true);
                 currentState = BirdState.jump;
                 rb.velocity = new Vector2(velocityJumpX, velocityJumpY);
-                animator.SetBool("IsJumping", true);
-                StartCoroutine(JumpingToNormal());
+
+                SoundManager.Instance.Play(SoundManager.Sounds.jump);
+
+                StartCoroutine(Falling());
             }
         }
 #else
@@ -67,8 +83,7 @@ public class Bird : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Spike"))
         {
-            currentState = BirdState.die;
-            animator.SetBool("IsDied", true);
+            Die();
         }
     }
 
@@ -90,19 +105,54 @@ public class Bird : MonoBehaviour
             velocityJumpX = -1 * velocityJumpX;
             scaleX = -1 * scaleX;
             transform.DOScaleX(scaleX, 0);
+
+            if (currentState != BirdState.die)
+            {
+                SoundManager.Instance.Play(SoundManager.Sounds.getScore);
+                GameManager.Instance.Score++;
+                if (GameManager.Instance.Score > PlayerPrefs.GetInt("bestScore", GameManager.Instance.BestScore))
+                {
+                    GameManager.Instance.BestScore = GameManager.Instance.Score;
+                    PlayerPrefs.SetInt("bestScore", GameManager.Instance.BestScore);
+                }
+            }
         }
 
         if (collision.gameObject.CompareTag("Spike"))
         {
-            currentState = BirdState.die;
-            animator.SetBool("IsDied", true);
+            Die();
         }
     }
 
-    IEnumerator JumpingToNormal()
+    void Die()
+    {
+        if (currentState != BirdState.die)
+        { 
+            currentState = BirdState.die;
+            SoundManager.Instance.Play(SoundManager.Sounds.die);
+            animator.SetBool("IsDied", true);
+            rb.velocity = new Vector2(velocityJumpX * 3, velocityJumpY);
+            StartCoroutine(FaceOutThenDie());
+        }
+    }
+
+    IEnumerator Falling()
     {
         yield return new WaitForSeconds(0.25f);
         animator.SetBool("IsJumping", false);
-        currentState = BirdState.normal;
+    }
+
+    IEnumerator FaceOutThenDie()
+    {
+        yield return new WaitForSeconds(1.5f);
+        animator.SetBool("IsFaceOut", true);
+        GameManager.Instance.GameOver();
+    }
+
+    void SetActiveToFalse()
+    {
+        gameObject.SetActive(false);
+        GameManager.Instance.FaceOutSpikesLeft();
+        GameManager.Instance.FaceOutSpikesRight();
     }
 }
