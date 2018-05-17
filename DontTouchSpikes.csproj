@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.4.0f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -220,6 +222,18 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
+    <Reference Include="DOTween">
+      <HintPath>Assets/Demigiant/DOTween/DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween43">
+      <HintPath>Assets/Demigiant/DOTween/DOTween43.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween46">
+      <HintPath>Assets/Demigiant/DOTween/DOTween46.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween50">
+      <HintPath>Assets/Demigiant/DOTween/DOTween50.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.Advertisements">
       <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
@@ -232,18 +246,6 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
-    <Reference Include="DOTween">
-      <HintPath>Assets/Demigiant/DOTween/DOTween.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween50">
-      <HintPath>Assets/Demigiant/DOTween/DOTween50.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween46">
-      <HintPath>Assets/Demigiant/DOTween/DOTween46.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween43">
-      <HintPath>Assets/Demigiant/DOTween/DOTween43.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Demigiant\DOTween\Examples\Basics.cs" />
@@ -253,6 +255,8 @@
     <Compile Include="Assets\EasyObjectPool\Example\CubeBehaviour.cs" />
     <Compile Include="Assets\EasyObjectPool\Example\Example.cs" />
     <Compile Include="Assets\Scripts\Bird.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Demigiant\DOTween\DOTween.XML" />
