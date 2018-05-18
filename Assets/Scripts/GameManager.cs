@@ -23,6 +23,8 @@ public class GameManager : Singleton<GameManager> {
     [SerializeField]
     GameObject ready;
 
+    public static string PoolShadows = "PoolShadows";
+
     private int score;
     public int Score
     {

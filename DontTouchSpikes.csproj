@@ -248,15 +248,14 @@
   <ItemGroup>
     <Compile Include="Assets\Demigiant\DOTween\Examples\Basics.cs" />
     <Compile Include="Assets\Demigiant\DOTween\Examples\Sequences.cs" />
-    <Compile Include="Assets\EasyObjectPool\Core\EasyObjectPool.cs" />
-    <Compile Include="Assets\EasyObjectPool\Core\PoolObject.cs" />
-    <Compile Include="Assets\EasyObjectPool\Example\CubeBehaviour.cs" />
-    <Compile Include="Assets\EasyObjectPool\Example\Example.cs" />
-    <Compile Include="Assets\Ready.cs" />
     <Compile Include="Assets\Scripts\Bird.cs" />
     <Compile Include="Assets\Scripts\Candy.cs" />
+    <Compile Include="Assets\Scripts\EasyObjectPool.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameOver.cs" />
+    <Compile Include="Assets\Scripts\PoolObject.cs" />
+    <Compile Include="Assets\Scripts\Ready.cs" />
+    <Compile Include="Assets\Scripts\Shadows.cs" />
     <Compile Include="Assets\Scripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
   </ItemGroup>

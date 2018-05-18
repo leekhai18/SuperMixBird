@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using MarchingBytes;
 
 public class Bird : MonoBehaviour
 {
@@ -29,39 +30,40 @@ public class Bird : MonoBehaviour
     [SerializeField]
     GameObject rendererForBeginAnim;
 
+    float countdownSpawnShadow;
+
     // Use this for initialization
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
         currentState = BirdState.begin;
         rb.bodyType = RigidbodyType2D.Kinematic;
+
+        countdownSpawnShadow = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (currentState == BirdState.jump)
+        {
+            countdownSpawnShadow += Time.deltaTime;
+
+            if (countdownSpawnShadow > 0.1f)
+            {
+                EasyObjectPool.Instance.GetObjectFromPool(GameManager.PoolShadows, transform.position, Quaternion.identity);
+                countdownSpawnShadow = 0;
+            }
+        }
 
 #if UNITY_EDITOR
         if (currentState != BirdState.die)
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (currentState == BirdState.begin)
-                {
-                    GameManager.Instance.Started();
-                    rendererForBeginAnim.SetActive(false);
-                    GetComponent<SpriteRenderer>().enabled = true;
-                    rb.bodyType = RigidbodyType2D.Dynamic;
-                }
-
-                animator.SetBool("IsJumping", true);
-                currentState = BirdState.jump;
-                rb.velocity = new Vector2(velocityJumpX, velocityJumpY);
-
-                SoundManager.Instance.Play(SoundManager.Sounds.jump);
-
-                StartCoroutine(Falling());
+                HandleMain();
             }
         }
 #else
@@ -71,13 +73,32 @@ public class Bird : MonoBehaviour
             {
                 if (Input.GetTouch(0).phase == TouchPhase.Began)
                 {
-                    Debug.Log("Touched");
+                    HandleMain();
                 }
             }
         }
 #endif
 
 
+    }
+
+    void HandleMain()
+    {
+        if (currentState == BirdState.begin)
+        {
+            GameManager.Instance.Started();
+            rendererForBeginAnim.SetActive(false);
+            GetComponent<SpriteRenderer>().enabled = true;
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
+
+        animator.SetBool("IsJumping", true);
+        currentState = BirdState.jump;
+        rb.velocity = new Vector2(velocityJumpX, velocityJumpY);
+
+        SoundManager.Instance.Play(SoundManager.Sounds.jump);
+
+        StartCoroutine(Falling());
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -155,6 +176,7 @@ public class Bird : MonoBehaviour
     {
         yield return new WaitForSeconds(0.25f);
         animator.SetBool("IsJumping", false);
+        countdownSpawnShadow = 0;
     }
 
     IEnumerator FaceOutThenDie()
