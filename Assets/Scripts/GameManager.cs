@@ -70,9 +70,6 @@ public class GameManager : Singleton<GameManager> {
     void Start () {
         bestScore = PlayerPrefs.GetInt("bestScore", 0);
         gamesPlayed = PlayerPrefs.GetInt("gamesPlayed", 0);
-
-        gamesPlayed++;
-        PlayerPrefs.SetInt("gamesPlayed", gamesPlayed);
     }
 	
 	// Update is called once per frame

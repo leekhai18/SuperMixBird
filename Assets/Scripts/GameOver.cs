@@ -33,6 +33,9 @@ public class GameOver : MonoBehaviour {
 
     void Init()
     {
+        GameManager.Instance.GamesPlayed++;
+        PlayerPrefs.SetInt("gamesPlayed", GameManager.Instance.GamesPlayed);
+
         scoreText.text = GameManager.Instance.Score.ToString("00");
         bestScoreText.text = GameManager.Instance.BestScore.ToString("00");
         gamesPlayedText.text = GameManager.Instance.GamesPlayed.ToString("00");
